@@ -46,6 +46,7 @@ def cleaning_data(min_base: int = 80, only_last_year: bool = False):
                 MAX(tipo_grau_academico)                         AS tipo_grau_academico,
                 MAX(tipo_modalidade_ensino)                      AS tipo_modalidade_ensino,   -- 2 = tem oferta EAD
                 COUNT(DISTINCT id_municipio)                     AS n_locais_oferta,
+                MAX(id_municipio)                                AS id_municipio_curso,   -- campus (município de oferta)
 
                 -- Variáveis do CURSO (fluxo)
                 SUM(quantidade_matriculas)                       AS matriculas,

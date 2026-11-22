@@ -201,6 +201,17 @@ def persistence_prediction(d_te, cuts):
     return pers, valido
 
 
+def group_column(d):
+    """
+    Unidade de agrupamento da validação cruzada.
+
+    - Várias IES (>= K_EXTERNO): agrupa por IES (o modelo é testado em IES não vistas).
+    - Uma única IES (ex.: só IFMG): agrupa por curso, mantendo todos os anos de um curso
+      no mesmo fold (evita vazamento via histórico t-1/t-2 do próprio curso).
+    """
+    return "id_ies" if d["id_ies"].nunique() >= K_EXTERNO else "id_curso"
+
+
 def validate_model(d, X, columns, name, factory, grid, with_importance):
     """
     Validação cruzada estratificada e agrupada por IES, com métricas e importância por permutação.
@@ -214,7 +225,7 @@ def validate_model(d, X, columns, name, factory, grid, with_importance):
     Returns:
         (métricas por fold, importâncias ou None, previsões fora da amostra)
     """
-    groups = d["id_ies"].values
+    groups = d[group_column(d)].values
     # A estratificação da divisão usa cortes globais (afeta só a divisão); os rótulos de
     # treino/teste usam cortes calculados no treino de cada fold.
     y_strat = for_risk(d[ALVO], cut_quartis(d[ALVO]))
@@ -378,6 +389,7 @@ def main():
     d = cleaning_data().reset_index(drop=True)
     anos = sorted(d["ano"].unique().tolist())
     print(f"Painel t->t: {len(d)} linhas | {d.id_curso.nunique()} cursos | {d.id_ies.nunique()} IES | anos {anos}")
+    print(f"Validação cruzada agrupada por: {group_column(d)}")
     X = assemble_attributes(d)
     models = define_models()
     if USE_ARTICLE:

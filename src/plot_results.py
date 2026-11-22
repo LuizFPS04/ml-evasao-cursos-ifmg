@@ -5,7 +5,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from src.utils import ALVO, MISSING
+from src.utils import ALVO, GRAU, MISSING, campus_of
 
 os.makedirs("data/results/figures", exist_ok=True)
 
@@ -147,15 +147,15 @@ def plot_subgroups_panel(best_model_name: str = "Random Forest"):
         titulo_mod = "Média dos Modelos"
 
     dimensoes = [
-        ("Regiao", "Região Geográfica"),
-        ("Modalidade", "Modalidade de Ensino"),
+        ("Campus", "Campus (município de oferta)"),
+        ("Grau_Academico", "Grau Acadêmico"),
         ("Perfil_Idade", "Faixa Etária Predominante"),
         ("Perfil_Ingresso_Cotas", "Forma de Ingresso (Reserva de Vagas)"),
         ("Perfil_Cor_Raca", "Perfil de Cor/Raça"),
         ("Area_Curso", "Área Geral do Curso (CINE Brasil)")
     ]
 
-    fig, axes = plt.subplots(3, 2, figsize=(15, 13))
+    fig, axes = plt.subplots(3, 2, figsize=(15, 15))
     axes = axes.flatten()
 
     for idx, (dim_key, dim_title) in enumerate(dimensoes):
@@ -202,7 +202,7 @@ def plot_subgroups_panel(best_model_name: str = "Random Forest"):
 # ==============================================================================
 # GRÁFICO 5: DISTRIBUIÇÃO (BOXPLOT) DA EVASÃO CONTÍNUA POR DIMENSÃO NA BASE BRUTA
 # ==============================================================================
-def plot_continuous_distributions(d: pd.DataFrame, X: pd.DataFrame, regiao_map: dict):
+def plot_continuous_distributions(d: pd.DataFrame, X: pd.DataFrame):
     """
     Mostra a distribuição real (mediana e quartis) da taxa de evasão do ano
     e a relação com Idade, Ingresso (Cotas) e Cor/Raça.
@@ -210,21 +210,20 @@ def plot_continuous_distributions(d: pd.DataFrame, X: pd.DataFrame, regiao_map: 
     fig, axes = plt.subplots(2, 3, figsize=(16, 9))
     y_evasao = d[ALVO] * 100  # em %
 
-    # 1. Boxplot por Região
-    reg_series = d["sigla_uf_ies"].map(regiao_map).fillna("ND")
-    reg_order = ["N", "NE", "CO", "SE", "S"]
-    data_reg = [y_evasao[reg_series == r].dropna() for r in reg_order if (reg_series == r).any()]
-    labels_reg = [r for r in reg_order if (reg_series == r).any()]
-    _boxplot(axes[0, 0], data_reg, labels_reg, "#a6cee3")
-    axes[0, 0].set_title("Evasão por Região")
+    # 1. Boxplot por Campus (ordenado pela mediana; campi com < 10 cursos x ano ficam de fora)
+    campus = campus_of(d)
+    cnt = campus.value_counts()
+    ordem = y_evasao.groupby(campus).median().loc[cnt[cnt >= 10].index].sort_values(ascending=False).index
+    _boxplot(axes[0, 0], [y_evasao[campus == c].dropna() for c in ordem], list(ordem), "#a6cee3")
+    axes[0, 0].tick_params(axis="x", rotation=60, labelsize=7.5)
+    axes[0, 0].set_title("Evasão por Campus (n ≥ 10)")
     axes[0, 0].set_ylabel("Taxa de Evasão (%)")
 
-    # 2. Boxplot por Modalidade
-    mod_series = np.where(d["tipo_modalidade_ensino"] == 2, "EAD", "Presencial")
-    labels_mod = ["Presencial", "EAD"]
-    data_mod = [y_evasao[mod_series == m].dropna() for m in labels_mod]
-    _boxplot(axes[0, 1], data_mod, labels_mod, "#b2df8a")
-    axes[0, 1].set_title("Evasão por Modalidade")
+    # 2. Boxplot por Grau Acadêmico
+    grau = d["tipo_grau_academico"].map(GRAU)
+    labels_grau = [g for g in GRAU.values() if (grau == g).any()]
+    _boxplot(axes[0, 1], [y_evasao[grau == g].dropna() for g in labels_grau], labels_grau, "#b2df8a")
+    axes[0, 1].set_title("Evasão por Grau Acadêmico")
 
     # 3. Boxplot por Área do Curso (CINE)
     area_series = d["id_area_geral"].fillna(-1).astype(int)

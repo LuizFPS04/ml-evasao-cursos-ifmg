@@ -20,13 +20,14 @@ from src.plot_results import (
     plot_continuous_distributions,
 )
 from src.cleaning import cleaning_data
-from src.utils import assemble_attributes, ALVO, MISSING, REGIAO, SEED
+from src.utils import assemble_attributes, campus_of, ALVO, GRAU, MISSING, SEED
 from src.models.ml_models_train import define_models, apply_selection, validate_model
 
 os.makedirs("data/results/csv", exist_ok=True)
 os.makedirs("data/results/figures", exist_ok=True)
 
-MIN_N_SUBGRUPO = 50   # subgrupos menores que isso são ignorados (F1-macro instável)
+# A base tem só ~240 cursos x ano (IFMG, 2020-2024); campi pequenos têm 3-5 linhas.
+MIN_N_SUBGRUPO = 15   # subgrupos menores que isso são ignorados (F1-macro instável)
 
 
 # ==============================================================================
@@ -155,7 +156,9 @@ def compare_selection_methods(d: pd.DataFrame, X: pd.DataFrame, eda_cols: list):
 
 
 # ==============================================================================
-# 4. SEPARAÇÃO POR DIMENSÕES (REGIÃO, IDADE, INGRESSO, CURSO, MODALIDADE, COR)
+# 4. SEPARAÇÃO POR DIMENSÕES (CAMPUS, IDADE, INGRESSO, ÁREA/GRAU DO CURSO, COR)
+#    A base é só do IFMG (uma IES, MG, cursos presenciais): região, UF e modalidade são
+#    constantes e não entram; o recorte espacial é o campus (município de oferta).
 # ==============================================================================
 def _perfil_binario(X: pd.DataFrame, col: str, rotulo_sim: str, rotulo_nao: str, limiar: float = 0.5) -> pd.Series:
     """Classifica o curso pelo limiar de uma proporção; ausentes (coluna inexistente ou MISSING) viram 'ND'."""
@@ -167,12 +170,14 @@ def _perfil_binario(X: pd.DataFrame, col: str, rotulo_sim: str, rotulo_nao: str,
 
 def thematic_and_subgroup_analysis(d: pd.DataFrame, X: pd.DataFrame, oof_predictions: pd.DataFrame):
     print("\n--- 4A. Modelagem por Grupos Temáticos de Variáveis ---")
+    # Campus em one-hot (só para o grupo temático; não entra nos demais cenários)
+    campus = pd.get_dummies(campus_of(d), prefix="campus", dtype=int)
+    X = pd.concat([X, campus], axis=1)
     thematic_groups = {
-        "Regiao": [c for c in X.columns if c.startswith("reg_")],
+        "Campus": list(campus.columns),
         "Idade": [c for c in X.columns if "idade" in c],
         "Formas_Ingresso_Apoio": [c for c in X.columns if any(k in c for k in ["reserva_", "financiamento", "apoio_social", "ingress_", "ocupacao_", "concorrencia"])],
         "Cursos_Area_Grau": [c for c in X.columns if c.startswith(("area_", "grau_")) or c in ["log_matriculas", "log_vagas", "concl_sobre_matric", "p_noturno", "p_feminino"]],
-        "Modalidade_Ensino": [c for c in X.columns if c in ["ead", "n_locais_oferta"]],
         "Cor_Raca": [c for c in X.columns if any(k in c for k in ["branca", "preta_parda", "amarela", "indigena"]) and c.startswith("p_")],
     }
 
@@ -200,8 +205,8 @@ def thematic_and_subgroup_analysis(d: pd.DataFrame, X: pd.DataFrame, oof_predict
         "id_ies": d["id_ies"],
         "id_curso": d["id_curso"],
         "ano": d["ano"],
-        "Regiao": d["sigla_uf_ies"].map(REGIAO).fillna("ND"),
-        "Modalidade": np.where(d["tipo_modalidade_ensino"] == 2, "EAD", "Presencial"),
+        "Campus": campus_of(d),
+        "Grau_Academico": d["tipo_grau_academico"].map(GRAU).fillna("ND"),
         "Area_Curso": "Área_" + d["id_area_geral"].fillna(-1).astype(int).astype(str),
         "Perfil_Idade": _perfil_binario(X, "p_idade_0_24", "Jovem (≥50% até 24a)", "Adulto (<50% até 24a)"),
         "Perfil_Ingresso_Cotas": _perfil_binario(X, "p_reserva_vaga", "Maioria Cotas (≥50%)", "Ampla/Misto (<50%)"),
@@ -211,7 +216,7 @@ def thematic_and_subgroup_analysis(d: pd.DataFrame, X: pd.DataFrame, oof_predict
     # As previsões OOF repetem cada curso x ano uma vez por modelo; a chave em 'meta' é única.
     oof_merged = oof_predictions.merge(meta, on=["id_ies", "id_curso", "ano"], how="left", validate="many_to_one")
 
-    slice_cols = ["Regiao", "Modalidade", "Area_Curso", "Perfil_Idade", "Perfil_Ingresso_Cotas", "Perfil_Cor_Raca"]
+    slice_cols = ["Campus", "Grau_Academico", "Area_Curso", "Perfil_Idade", "Perfil_Ingresso_Cotas", "Perfil_Cor_Raca"]
     slice_rows = []
 
     for sc in slice_cols:
@@ -237,11 +242,12 @@ def thematic_and_subgroup_analysis(d: pd.DataFrame, X: pd.DataFrame, oof_predict
 
 # Atributos escolhidos no EDA. NÃO incluir taxa_evasao_t, taxa_trancado_t nem taxa_desvinc_t:
 # são o próprio alvo (ou seus componentes) no desenho t -> t. O histórico do curso entra via
-# taxa_evasao_t1 (ano anterior).
+# taxa_evasao_t1 (ano anterior). "ead" e "n_locais_oferta" ficaram de fora: são constantes no
+# IFMG (todos os cursos presenciais, um local de oferta).
 EDA_CANDIDATAS = [
     "taxa_evasao_t1", "diff_taxa_curso_ies",
     "log_matriculas", "log_vagas", "concorrencia", "ocupacao_vagas",
-    "ingress_sobre_matric", "concl_sobre_matric", "ead", "n_locais_oferta",
+    "ingress_sobre_matric", "concl_sobre_matric",
     "p_feminino", "p_noturno", "p_idade_0_24", "p_idade_35_49", "p_idade_50_mais",
     "p_branca", "p_preta_parda", "p_reserva_vaga", "p_reserva_rede_publica",
     "p_reserva_renda", "p_apoio_social", "p_extracurricular",
@@ -263,7 +269,7 @@ if __name__ == "__main__":
     # Etapas 2 e 3: Modelos com EDA vs Outros Métodos de Seleção
     oof_eda = compare_selection_methods(d, X, eda_selected_cols)
 
-    # Etapa 4: Recortes por Região, Idade, Ingresso, Cursos, Modalidade e Cor
+    # Etapa 4: Recortes por Campus, Idade, Ingresso, Área/Grau do curso e Cor
     thematic_and_subgroup_analysis(d, X, oof_eda)
 
     # Gráficos em data/results/figures/
@@ -271,4 +277,4 @@ if __name__ == "__main__":
     plot_selection_methods_comparison()
     plot_thematic_groups()
     plot_subgroups_panel(best_model_name="Random Forest")
-    plot_continuous_distributions(d, X, REGIAO)
+    plot_continuous_distributions(d, X)

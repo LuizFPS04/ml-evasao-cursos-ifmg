@@ -17,6 +17,26 @@ REGIAO = {
     **dict.fromkeys(["PR", "RS", "SC"], "S")
 }
 
+# Campi do IFMG pelo código IBGE do município de oferta do curso (id_municipio)
+CAMPUS = {
+    3104205: "Arcos", 3105103: "Bambuí", 3106705: "Betim", 3118007: "Congonhas",
+    3126109: "Formiga", 3127701: "Gov. Valadares", 3129806: "Ibirité", 3131307: "Ipatinga",
+    3131901: "Itabirito", 3145901: "Ouro Branco", 3146107: "Ouro Preto", 3151503: "Piumhi",
+    3152105: "Ponte Nova", 3154606: "Ribeirão das Neves", 3156700: "Sabará",
+    3157807: "Santa Luzia", 3162807: "São João Evangelista",
+}
+
+# Grau acadêmico (INEP)
+GRAU = {1: "Bacharelado", 2: "Licenciatura", 3: "Tecnológico"}
+
+
+def campus_of(df: pd.DataFrame) -> pd.Series:
+    """Nome do campus de cada linha (a partir de `id_municipio_curso`); 'ND' se ausente."""
+    if "id_municipio_curso" not in df.columns:
+        return pd.Series("ND", index=df.index)
+    cod = df["id_municipio_curso"]
+    return cod.map(lambda c: CAMPUS.get(int(c), f"Mun. {int(c)}") if pd.notna(c) else "ND")
+
 # Atributos de histórico do PRÓPRIO curso (anos anteriores)
 HIST_COLS = [
     "taxa_evasao_t1", "taxa_evasao_t2",

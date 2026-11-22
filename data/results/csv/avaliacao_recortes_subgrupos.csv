@@ -1,0 +1,111 @@
+Dimensao,Subgrupo,modelo,N_Cursos_Ano,Taxa_Evasao_Real_Media,acurácia,F1-macro,kappa
+Campus,Bambuí,MLP,40,0.137,0.35,0.187,-0.073
+Campus,Congonhas,MLP,19,0.227,0.421,0.318,0.059
+Campus,Formiga,MLP,18,0.205,0.667,0.357,0.069
+Campus,Gov. Valadares,MLP,18,0.246,0.5,0.367,0.221
+Campus,Ouro Branco,MLP,20,0.218,0.2,0.162,-0.255
+Campus,Ouro Preto,MLP,15,0.239,0.533,0.508,0.352
+Campus,Sabará,MLP,20,0.184,0.35,0.179,-0.066
+Campus,Santa Luzia,MLP,15,0.185,0.267,0.22,-0.179
+Campus,São João Evangelista,MLP,26,0.18,0.385,0.378,0.084
+Campus,Bambuí,Naive Bayes,40,0.137,0.425,0.249,-0.013
+Campus,Congonhas,Naive Bayes,19,0.227,0.526,0.357,0.1
+Campus,Formiga,Naive Bayes,18,0.205,0.778,0.432,0.345
+Campus,Gov. Valadares,Naive Bayes,18,0.246,0.667,0.662,0.325
+Campus,Ouro Branco,Naive Bayes,20,0.218,0.25,0.175,-0.215
+Campus,Ouro Preto,Naive Bayes,15,0.239,0.533,0.357,0.167
+Campus,Sabará,Naive Bayes,20,0.184,0.5,0.39,0.219
+Campus,Santa Luzia,Naive Bayes,15,0.185,0.467,0.363,0.143
+Campus,São João Evangelista,Naive Bayes,26,0.18,0.423,0.333,0.08
+Campus,Bambuí,Random Forest,40,0.137,0.45,0.27,-0.016
+Campus,Congonhas,Random Forest,19,0.227,0.632,0.422,0.3
+Campus,Formiga,Random Forest,18,0.205,0.778,0.422,0.25
+Campus,Gov. Valadares,Random Forest,18,0.246,0.667,0.5,0.46
+Campus,Ouro Branco,Random Forest,20,0.218,0.45,0.372,0.106
+Campus,Ouro Preto,Random Forest,15,0.239,0.533,0.368,0.125
+Campus,Sabará,Random Forest,20,0.184,0.5,0.361,0.187
+Campus,Santa Luzia,Random Forest,15,0.185,0.533,0.389,0.153
+Campus,São João Evangelista,Random Forest,26,0.18,0.423,0.321,0.051
+Campus,Bambuí,kNN,40,0.137,0.475,0.359,-0.005
+Campus,Congonhas,kNN,19,0.227,0.421,0.242,-0.1
+Campus,Formiga,kNN,18,0.205,0.778,0.438,0.0
+Campus,Gov. Valadares,kNN,18,0.246,0.722,0.699,0.416
+Campus,Ouro Branco,kNN,20,0.218,0.35,0.25,-0.04
+Campus,Ouro Preto,kNN,15,0.239,0.4,0.268,-0.125
+Campus,Sabará,kNN,20,0.184,0.45,0.293,0.091
+Campus,Santa Luzia,kNN,15,0.185,0.467,0.333,0.062
+Campus,São João Evangelista,kNN,26,0.18,0.5,0.333,0.159
+Campus,Bambuí,Árvore de Decisão,40,0.137,0.35,0.255,-0.096
+Campus,Congonhas,Árvore de Decisão,19,0.227,0.684,0.465,0.4
+Campus,Formiga,Árvore de Decisão,18,0.205,0.778,0.568,0.5
+Campus,Gov. Valadares,Árvore de Decisão,18,0.246,0.611,0.444,0.351
+Campus,Ouro Branco,Árvore de Decisão,20,0.218,0.45,0.357,0.157
+Campus,Ouro Preto,Árvore de Decisão,15,0.239,0.667,0.631,0.457
+Campus,Sabará,Árvore de Decisão,20,0.184,0.45,0.363,0.16
+Campus,Santa Luzia,Árvore de Decisão,15,0.185,0.333,0.222,-0.172
+Campus,São João Evangelista,Árvore de Decisão,26,0.18,0.346,0.318,-0.005
+Grau_Academico,Bacharelado,MLP,170,0.177,0.453,0.305,-0.011
+Grau_Academico,Licenciatura,MLP,35,0.223,0.371,0.286,-0.004
+Grau_Academico,Tecnológico,MLP,33,0.231,0.303,0.282,-0.037
+Grau_Academico,Bacharelado,Naive Bayes,170,0.177,0.512,0.331,0.041
+Grau_Academico,Licenciatura,Naive Bayes,35,0.223,0.429,0.304,0.028
+Grau_Academico,Tecnológico,Naive Bayes,33,0.231,0.485,0.329,0.083
+Grau_Academico,Bacharelado,Random Forest,170,0.177,0.535,0.364,0.075
+Grau_Academico,Licenciatura,Random Forest,35,0.223,0.543,0.394,0.205
+Grau_Academico,Tecnológico,Random Forest,33,0.231,0.576,0.492,0.306
+Grau_Academico,Bacharelado,kNN,170,0.177,0.559,0.316,0.076
+Grau_Academico,Licenciatura,kNN,35,0.223,0.4,0.244,-0.086
+Grau_Academico,Tecnológico,kNN,33,0.231,0.485,0.475,0.183
+Grau_Academico,Bacharelado,Árvore de Decisão,170,0.177,0.459,0.354,0.027
+Grau_Academico,Licenciatura,Árvore de Decisão,35,0.223,0.571,0.532,0.306
+Grau_Academico,Tecnológico,Árvore de Decisão,33,0.231,0.515,0.483,0.193
+Area_Curso,Área_1,MLP,35,0.223,0.371,0.286,-0.004
+Area_Curso,Área_4,MLP,48,0.185,0.438,0.327,0.017
+Area_Curso,Área_6,MLP,24,0.195,0.5,0.222,-0.063
+Area_Curso,Área_7,MLP,97,0.192,0.474,0.336,0.022
+Area_Curso,Área_8,MLP,25,0.127,0.28,0.275,0.102
+Area_Curso,Área_1,Naive Bayes,35,0.223,0.429,0.304,0.028
+Area_Curso,Área_4,Naive Bayes,48,0.185,0.5,0.361,0.152
+Area_Curso,Área_6,Naive Bayes,24,0.195,0.5,0.235,0.0
+Area_Curso,Área_7,Naive Bayes,97,0.192,0.536,0.35,0.087
+Area_Curso,Área_8,Naive Bayes,25,0.127,0.36,0.385,0.076
+Area_Curso,Área_1,Random Forest,35,0.223,0.543,0.394,0.205
+Area_Curso,Área_4,Random Forest,48,0.185,0.583,0.492,0.245
+Area_Curso,Área_6,Random Forest,24,0.195,0.542,0.319,0.083
+Area_Curso,Área_7,Random Forest,97,0.192,0.577,0.406,0.174
+Area_Curso,Área_8,Random Forest,25,0.127,0.28,0.186,-0.087
+Area_Curso,Área_1,kNN,35,0.223,0.4,0.244,-0.086
+Area_Curso,Área_4,kNN,48,0.185,0.583,0.478,0.216
+Area_Curso,Área_6,kNN,24,0.195,0.583,0.343,0.143
+Area_Curso,Área_7,kNN,97,0.192,0.598,0.389,0.158
+Area_Curso,Área_8,kNN,25,0.127,0.28,0.173,-0.064
+Area_Curso,Área_1,Árvore de Decisão,35,0.223,0.571,0.532,0.306
+Area_Curso,Área_4,Árvore de Decisão,48,0.185,0.5,0.445,0.197
+Area_Curso,Área_6,Árvore de Decisão,24,0.195,0.458,0.311,0.025
+Area_Curso,Área_7,Árvore de Decisão,97,0.192,0.464,0.394,0.073
+Area_Curso,Área_8,Árvore de Decisão,25,0.127,0.36,0.25,-0.058
+Perfil_Idade,Adulto (<50% até 24a),MLP,88,0.21,0.409,0.34,0.053
+Perfil_Idade,Jovem (≥50% até 24a),MLP,150,0.18,0.427,0.327,0.005
+Perfil_Idade,Adulto (<50% até 24a),Naive Bayes,88,0.21,0.443,0.333,0.088
+Perfil_Idade,Jovem (≥50% até 24a),Naive Bayes,150,0.18,0.527,0.392,0.113
+Perfil_Idade,Adulto (<50% até 24a),Random Forest,88,0.21,0.545,0.456,0.25
+Perfil_Idade,Jovem (≥50% até 24a),Random Forest,150,0.18,0.54,0.391,0.106
+Perfil_Idade,Adulto (<50% até 24a),kNN,88,0.21,0.489,0.431,0.141
+Perfil_Idade,Jovem (≥50% até 24a),kNN,150,0.18,0.547,0.299,0.063
+Perfil_Idade,Adulto (<50% até 24a),Árvore de Decisão,88,0.21,0.5,0.446,0.196
+Perfil_Idade,Jovem (≥50% até 24a),Árvore de Decisão,150,0.18,0.473,0.427,0.107
+Perfil_Ingresso_Cotas,Ampla/Misto (<50%),MLP,229,0.19,0.415,0.34,0.025
+Perfil_Ingresso_Cotas,Ampla/Misto (<50%),Naive Bayes,229,0.19,0.502,0.389,0.148
+Perfil_Ingresso_Cotas,Ampla/Misto (<50%),Random Forest,229,0.19,0.541,0.438,0.191
+Perfil_Ingresso_Cotas,Ampla/Misto (<50%),kNN,229,0.19,0.52,0.377,0.116
+Perfil_Ingresso_Cotas,Ampla/Misto (<50%),Árvore de Decisão,229,0.19,0.48,0.443,0.154
+Perfil_Cor_Raca,Maioria Preta/Parda (≥50%),MLP,136,0.201,0.434,0.379,0.087
+Perfil_Cor_Raca,Outras/Misto (<50%),MLP,102,0.178,0.402,0.27,-0.071
+Perfil_Cor_Raca,Maioria Preta/Parda (≥50%),Naive Bayes,136,0.201,0.485,0.362,0.134
+Perfil_Cor_Raca,Outras/Misto (<50%),Naive Bayes,102,0.178,0.51,0.366,0.086
+Perfil_Cor_Raca,Maioria Preta/Parda (≥50%),Random Forest,136,0.201,0.515,0.393,0.161
+Perfil_Cor_Raca,Outras/Misto (<50%),Random Forest,102,0.178,0.578,0.465,0.197
+Perfil_Cor_Raca,Maioria Preta/Parda (≥50%),kNN,136,0.201,0.493,0.371,0.092
+Perfil_Cor_Raca,Outras/Misto (<50%),kNN,102,0.178,0.569,0.382,0.136
+Perfil_Cor_Raca,Maioria Preta/Parda (≥50%),Árvore de Decisão,136,0.201,0.5,0.455,0.194
+Perfil_Cor_Raca,Outras/Misto (<50%),Árvore de Decisão,102,0.178,0.461,0.428,0.071
